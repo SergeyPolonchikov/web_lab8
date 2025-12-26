@@ -1,0 +1,269 @@
+[file name]: builder.html
+[file content begin]
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Собрать ланч - LunchTime</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="builder.css">
+    <style>
+        .checkout-panel {
+            position: sticky;
+            bottom: 20px;
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 5%;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            border: 2px solid #e74c3c;
+            display: none;
+            z-index: 100;
+        }
+        
+        .checkout-panel-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .checkout-info {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .checkout-info h3 {
+            margin: 0 0 0.5rem 0;
+            color: #2c3e50;
+        }
+        
+        .checkout-total {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        
+        .checkout-action {
+            flex-shrink: 0;
+        }
+        
+        .checkout-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .checkout-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+        }
+        
+        .checkout-link.disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            pointer-events: none;
+        }
+        
+        @media (max-width: 768px) {
+            .checkout-panel {
+                margin: 1rem;
+                bottom: 10px;
+            }
+            
+            .checkout-panel-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Lunch<span>Time</span></div>
+            <ul>
+                <li><a href="index.html">О нас</a></li>
+                <li><a href="builder.html" id="active">Собрать ланч</a></li>
+                <li><a href="checkout.html">Оформить заказ</a></li>
+                <li><a href="index.html#contacts">Контакты</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="lunch-variants-section">
+        <h2>Варианты бизнес-ланчей</h2>
+        
+        <div class="variants-grid">
+            <!-- Варианты ланчей остаются без изменений -->
+            <!-- Вариант 1 -->
+            <div class="variant-card">
+                <div class="variant-dishes">
+                    <div class="variant-dish">
+                        <img src="soup.png" alt="Суп" class="variant-image">
+                        <span>Суп</span>
+                    </div>
+                    <div class="variant-dish">
+                        <img src="main.png" alt="Главное блюдо" class="variant-image">
+                        <span>Главное блюдо</span>
+                    </div>
+                    <div class="variant-dish">
+                        <img src="salad.png" alt="Салат" class="variant-image">
+                        <span>Салат</span>
+                    </div>
+                    <div class="variant-dish">
+                        <img src="drink.png" alt="Напиток" class="variant-image">
+                        <span>Напиток</span>
+                    </div>
+                </div>
+                <p class="variant-name">Полный обед</p>
+            </div>
+
+            <!-- Вариант 2 -->
+            <div class="variant-card">
+                <div class="variant-dishes">
+                    <div class="variant-dish">
+                        <img src="soup.png" alt="Суп" class="variant-image">
+                        <span>Суп</span>
+                    </div>
+                    <div class="variant-dish">
+                        <img src="main.png" alt="Главное блюдо" class="variant-image">
+                        <span>Главное блюдо</span>
+                    </div>
+                    <div class="variant-dish">
+                        <img src="drink.png" alt="Напиток" class="variant-image">
+                        <span>Напиток</span>
+                    </div>
+                </div>
+                <p class="variant-name">Классический</p>
+            </div>
+
+            <!-- Вариант 3 -->
+            <div class="variant-card">
+                <div class="variant-dishes">
+                    <div class="variant-dish">
+                        <img src="soup.png" alt="Суп" class="variant-image">
+                        <span>Суп</span>
+                    </div>
+                    <div class="variant-dish">
+                        <img src="salad.png" alt="Салат" class="variant-image">
+                        <span>Салат</span>
+                    </div>
+                    <div class="variant-dish">
+                        <img src="drink.png" alt="Напиток" class="variant-image">
+                        <span>Напиток</span>
+                    </div>
+                </div>
+                <p class="variant-name">Легкий</p>
+            </div>
+
+            <!-- Вариант 4 -->
+            <div class="variant-card">
+                <div class="variant-dishes">
+                    <div class="variant-dish">
+                        <img src="main.png" alt="Главное блюдо" class="variant-image">
+                        <span>Главное блюдо</span>
+                    </div>
+                    <div class="variant-dish">
+                        <img src="salad.png" alt="Салат" class="variant-image">
+                        <span>Салат</span>
+                    </div>
+                    <div class="variant-dish">
+                        <img src="drink.png" alt="Напиток" class="variant-image">
+                        <span>Напиток</span>
+                    </div>
+                </div>
+                <p class="variant-name">Сытный</p>
+            </div>
+
+            <!-- Вариант 5 -->
+            <div class="variant-card">
+                <div class="variant-dishes">
+                    <div class="variant-dish">
+                        <img src="main.png" alt="Главное блюдо" class="variant-image">
+                        <span>Главное блюдо</span>
+                    </div>
+                    <div class="variant-dish">
+                        <img src="drink.png" alt="Напиток" class="variant-image">
+                        <span>Напиток</span>
+                    </div>
+                </div>
+                <p class="variant-name">Базовый</p>
+            </div>
+
+            <!-- Блок с информацией о десертах -->
+            <div class="variant-card dessert-info-card">
+                <div class="dessert-content">
+                    <img src="dessert.png" alt="Десерт" class="dessert-image">
+                    <div class="dessert-text-content">
+                        <h3>Десерты</h3>
+                        <p>Можно добавить к любому варианту ланча</p>
+                        <div class="dessert-features">
+                            <div class="dessert-feature-item">
+                                <span>•</span>
+                                <span>Маленькие порции</span>
+                            </div>
+                            <div class="dessert-feature-item">
+                                <span class=>•</span>
+                                <span>Средние порции</span>
+                            </div>
+                            <div class="dessert-feature-item">
+                                <span class=>•</span>
+                                <span>Большие порции</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main>
+        <!-- Все секции будут созданы динамически через JavaScript -->
+    </main>
+
+    <!-- Панель перехода к оформлению заказа -->
+    <div class="checkout-panel">
+        <div class="checkout-panel-content">
+            <div class="checkout-info">
+                <h3>Текущий заказ</h3>
+                <div class="checkout-total">0 руб.</div>
+            </div>
+            <div class="checkout-action">
+                <a href="checkout.html" class="checkout-link disabled">Перейти к оформлению</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="logo">Lunch<span>Time</span></div>
+            <p>© 2023 Доставка бизнес-ланчей в Москве</p>
+            <ul>
+                <li><a href="index.html">О нас</a></li>
+                <li><a href="builder.html" id="active">Собрать ланч</a></li>
+                <li><a href="checkout.html">Оформить заказ</a></li>
+                <li><a href="index.html#contacts">Контакты</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <!-- Подключаем JavaScript файлы -->
+    <script src="dishes.js"></script>
+    <script src="displayDishes.js"></script>
+    <script src="orderManager.js"></script>
+</body>
+</html>
+[file content end]

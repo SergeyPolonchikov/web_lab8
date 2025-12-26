@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LunchTime - Доставка бизнес-ланчей в Москве</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="header-image">
+            <img src="image0.jpg" alt="Бизнес-ланчи">
+        </div>
+<nav>
+    <div class="logo">Lunch<span>Time</span></div>
+    <ul>
+        <li><a href="index.html" id="active">О нас</a></li>
+        <li><a href="builder.html">Собрать ланч</a></li>
+        <li><a href="checkout.html">Оформить заказ</a></li>
+        <li><a href="#contacts">Контакты</a></li>
+    </ul>
+</nav>
+        <div class="header-text">
+            <h1>Доставка бизнес-ланчей в Москве</h1>
+            <p>Свежие, вкусные и сытные обеды прямо в ваш офис</p>
+        </div>
+    </header>
+
+    <main>
+        <section id="about">
+            <h2>О нас</h2>
+            <p>Мы готовим и доставляем вкусные и полезные бизнес-ланчи для сотрудников московских компаний. Наша миссия — обеспечить вас энергией для продуктивного рабочего дня.</p>
+            
+            <div class="advantages">
+                <div class="advantage-item">
+                    <h3>Свежие продукты</h3>
+                    <p>Только свежие и качественные ингредиенты</p>
+                </div>
+                <div class="advantage-item">
+                    <h3>Быстрая доставка</h3>
+                    <p>Доставляем вовремя, чтобы еда была горячей</p>
+                </div>
+                <div class="advantage-item">
+                    <h3>Разнообразное меню</h3>
+                    <p>Каждый день новое меню</p>
+                </div>
+            </div>
+
+            <h3>Самые популярные блюда</h3>
+            <div class="dishes-grid-main" id="popular-dishes">
+                <!-- Блюда будут загружены динамически из API -->
+                <div class="loading-text">Загружаем популярные блюда...</div>
+            </div>
+        </section>
+
+        <section id="contacts">
+            <h2>Контакты</h2>
+            <div class="contact-info">
+                <p><strong>Телефон:</strong> +7 (495) 123-45-67</p>
+                <p><strong>Email:</strong> order@lunchtime.ru</p>
+                <p><strong>Время работы:</strong> Пн-Пт, 9:00 - 18:00</p>
+                <p><strong>Адрес:</strong> г. Москва, ул. Доставки, д. 1</p>
+            </div>
+        </section>
+    </main>
+
+     <footer>
+        <div class="footer-content">
+            <div class="logo">Lunch<span>Time</span></div>
+            <p>© 2023 Доставка бизнес-ланчей в Москве</p>
+            <ul>
+                <li><a href="index.html" id="active">О нас</a></li>
+                <li><a href="builder.html">Собрать ланч</a></li>
+                <li><a href="builder.html#order-section">Заказы</a></li>
+                <li><a href="#contacts">Контакты</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <script>
+    // Функция для загрузки и отображения популярных блюд
+    async function loadPopularDishes() {
+        try {
+            const popularDishesContainer = document.getElementById('popular-dishes');
+            if (!popularDishesContainer) return;
+
+            // Показываем индикатор загрузки
+            popularDishesContainer.innerHTML = '<div class="loading-text">Загружаем популярные блюда...</div>';
+
+            // Пробуем разные CORS-прокси
+            const proxyConfigs = [
+                {
+                    url: `https://api.allorigins.win/raw?url=${encodeURIComponent('https://edu.std-900.ist.mospolytech.ru/labs/api/food')}`,
+                    name: 'allorigins'
+                },
+                {
+                    url: `https://corsproxy.io/?${encodeURIComponent('https://edu.std-900.ist.mospolytech.ru/labs/api/food')}`,
+                    name: 'corsproxy.io'
+                },
+                {
+                    url: `https://thingproxy.freeboard.io/fetch/https://edu.std-900.ist.mospolytech.ru/labs/api/food`,
+                    name: 'thingproxy'
+                }
+            ];
+            
+            let dishesData = null;
+            let successfulProxy = null;
+            
+            // Пробуем каждый прокси по очереди
+            for (let proxy of proxyConfigs) {
+                try {
+                    console.log(`Пробуем прокси: ${proxy.name}`);
+                    
+                    const options = {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    };
+                    
+                    // Добавляем таймаут
+                    const timeoutPromise = new Promise((_, reject) => {
+                        setTimeout(() => reject(new Error('Таймаут')), 5000);
+                    });
+                    
+                    const fetchPromise = fetch(proxy.url, options);
+                    
+                    const response = await Promise.race([fetchPromise, timeoutPromise]);
+                    
+                    if (response && response.ok) {
+                        dishesData = await response.json();
+                        successfulProxy = proxy.name;
+                        console.log(`✓ Успешно через прокси: ${proxy.name}`);
+                        break;
+                    }
+                    
+                } catch (error) {
+                    console.log(`✗ Прокси ${proxy.name} не сработал:`, error.message);
+                    continue;
+                }
+            }
+            
+            if (!dishesData) {
+                throw new Error('Не удалось загрузить данные через прокси');
+            }
+            
+            // Выбираем 6 популярных блюд (разные категории)
+            const getRandomDishes = (dishes, count) => {
+                const shuffled = [...dishes].sort(() => 0.5 - Math.random());
+                return shuffled.slice(0, count);
+            };
+            
+            const popularDishes = getRandomDishes(dishesData, 6);
+            
+            // Очищаем контейнер
+            popularDishesContainer.innerHTML = '';
+            
+            // Отображаем блюда
+            popularDishes.forEach(dish => {
+                // Преобразуем категорию для отображения
+                let categoryName = '';
+                switch(dish.category) {
+                    case 'soup': categoryName = 'Суп'; break;
+                    case 'main-course': categoryName = 'Основное блюдо'; break;
+                    case 'salad': categoryName = 'Салат'; break;
+                    case 'drink': categoryName = 'Напиток'; break;
+                    case 'dessert': categoryName = 'Десерт'; break;
+                    default: categoryName = 'Блюдо';
+                }
+                
+                // Создаем карточку блюда
+                const dishCard = document.createElement('div');
+                dishCard.className = 'dish-card-main';
+                dishCard.innerHTML = `
+                    <img src="${dish.image}" alt="${dish.name}" class="dish-image" 
+                         onerror="this.onerror=null; this.src='placeholder.jpg';">
+                    <div class="dish-info">
+                        <h4>${dish.name}</h4>
+                        <p><strong>Категория:</strong> ${categoryName}</p>
+                        <p><strong>Порция:</strong> ${dish.count}</p>
+                        <span class="dish-price">${dish.price} руб.</span>
+                    </div>
+                `;
+                
+                popularDishesContainer.appendChild(dishCard);
+            });
+            
+            // Если блюд нет, показываем сообщение
+            if (popularDishes.length === 0) {
+                popularDishesContainer.innerHTML = '<div class="no-dishes">Популярные блюда временно недоступны</div>';
+            }
+            
+        } catch (error) {
+            console.error('Ошибка загрузки популярных блюд:', error);
+            const popularDishesContainer = document.getElementById('popular-dishes');
+            if (popularDishesContainer) {
+                popularDishesContainer.innerHTML = `
+                    <div class="error-message">
+                        <p>Не удалось загрузить популярные блюда</p>
+                        <button onclick="loadPopularDishes()" class="retry-btn">Повторить попытку</button>
+                    </div>
+                `;
+            }
+            
+            // Показываем статические данные как fallback
+            showFallbackDishes();
+        }
+    }
+    
+    // Функция для отображения блюд из локальных данных (fallback)
+    function showFallbackDishes() {
+        const popularDishesContainer = document.getElementById('popular-dishes');
+        if (!popularDishesContainer) return;
+        
+        const fallbackDishes = [
+            {
+                name: "Том ям с креветками",
+                category: "Суп",
+                count: "500 г",
+                price: 650,
+                image: "https://edu.std-900.ist.mospolytech.ru/labs/api/images/soups/tomyum"
+            },
+            {
+                name: "Паста с креветками",
+                category: "Основное блюдо",
+                count: "280 г",
+                price: 340,
+                image: "https://edu.std-900.ist.mospolytech.ru/labs/api/images/main_course/shrimppasta"
+            },
+            {
+                name: "Цезарь с цыпленком",
+                category: "Салат",
+                count: "220 г",
+                price: 370,
+                image: "https://edu.std-900.ist.mospolytech.ru/labs/api/images/salads_starters/caesar"
+            },
+            {
+                name: "Лазанья",
+                category: "Основное блюдо",
+                count: "310 г",
+                price: 385,
+                image: "https://edu.std-900.ist.mospolytech.ru/labs/api/images/main_course/lasagna"
+            }
+        ];
+        
+        popularDishesContainer.innerHTML = '';
+        
+        fallbackDishes.forEach(dish => {
+            const dishCard = document.createElement('div');
+            dishCard.className = 'dish-card-main';
+            dishCard.innerHTML = `
+                <img src="${dish.image}" alt="${dish.name}" class="dish-image" 
+                     onerror="this.onerror=null; this.src='placeholder.jpg';">
+                <div class="dish-info">
+                    <h4>${dish.name}</h4>
+                    <p><strong>Категория:</strong> ${dish.category}</p>
+                    <p><strong>Порция:</strong> ${dish.count}</p>
+                    <span class="dish-price">${dish.price} руб.</span>
+                </div>
+            `;
+            
+            popularDishesContainer.appendChild(dishCard);
+        });
+    }
+    
+    // Загружаем популярные блюда при загрузке страницы
+    document.addEventListener('DOMContentLoaded', loadPopularDishes);
+    
+    
+    document.head.appendChild(style);
+    </script>
+</body>
+</html>
